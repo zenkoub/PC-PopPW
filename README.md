@@ -9,35 +9,40 @@
 โดยค่าของคะแนนที่ได้จะมีการเชื่อมโยงกัน โครงงานยังมีการเผยแพร่โค้ดโปรแกรมเพื่อให้ผู้สนใจสามารถนำไปศึกษาและพัฒนาต่อยอดได้\
 ผ่าน Github repository ซึ่งเป็นการส่งเสริมการแบ่งปันความรู้และพัฒนาชุมชนผู้พัฒนาเกมต่อไป
 
+## ภาพรวมวงจร
+> ![Circuit](https://github.com/zenkoub/PC-PopPW/blob/3cebd1051ed2abb545242101dc01bb4e3d68098e/circuitComponents/Circuit.png "Circuit")
+
 ## อุปกรณ์ที่ใช้งาน
 * #### Arduino UNO R4 Wi-Fi
-> ![Arduino Uno Screenshot](https://github.com/pprwf/PhyCom-Project__LightIntensityAlarm__/blob/main/Picture/Arduino%20Uno.png "Arduino Uno")
+> ![Arduino Uno Screenshot](https://github.com/zenkoub/PC-PopPW/blob/63904f5d601fd48dbd01d3925087302760309e19/circuitComponents/ArduinoUNOR4WiFi.png "Arduino UNO R4 Wi-Fi")
 
 * #### Breadboard
-> ![Breadboardd Screenshot](https://github.com/pprwf/PhyCom-Project__LightIntensityAlarm__/blob/main/Picture/Breadboard.png "Breadboard")
+> ![Breadboardd Screenshot](https://github.com/zenkoub/PC-PopPW/blob/63904f5d601fd48dbd01d3925087302760309e19/circuitComponents/Breadboard.png "Breadboard")
 
-* #### Buzzer       
-> ![Buzzer Screenshot](https://github.com/pprwf/PhyCom-Project__LightIntensityAlarm__/blob/main/Picture/Buzzer.png "Buzzer")
+* #### Passive Buzzer       
+> ![Buzzer Screenshot](https://github.com/zenkoub/PC-PopPW/blob/63904f5d601fd48dbd01d3925087302760309e19/circuitComponents/PassiveBuzzer.png "Passive Buzzer")
 
 * #### Switch Button
-> ![Push Button Screenshot](https://github.com/pprwf/PhyCom-Project__LightIntensityAlarm__/blob/main/Picture/Red%20Push%20Button.png "Button")
+> ![Button Screenshot](https://github.com/zenkoub/PC-PopPW/blob/63904f5d601fd48dbd01d3925087302760309e19/circuitComponents/SwitchButton.png "Switch Button")
 
 * #### 20x4 LCD Panel
-> ![(Seeed Studio) Grove - Light Sensor Screenshot](https://github.com/pprwf/PhyCom-Project__LightIntensityAlarm__/blob/main/Picture/Grove%20-%20Light%20Sensor.png "Light Sensor")
+> ![(LCD](https://github.com/zenkoub/PC-PopPW/blob/3cebd1051ed2abb545242101dc01bb4e3d68098e/circuitComponents/LCD.png "LCD")
 
 * #### I2C Adapter
-> ![(ky-008) Laser Transmitter Screenshot](https://github.com/pprwf/PhyCom-Project__LightIntensityAlarm__/blob/main/Picture/Laser%20Transmitter.png "Laser")
+> ![(ky-008) i2c Screenshot](https://github.com/zenkoub/PC-PopPW/blob/3cebd1051ed2abb545242101dc01bb4e3d68098e/circuitComponents/I2C_Adapter.png "I2C Adapter")
 
-* #### 4x4 Keypad Matrix
-> ![Keypad Screenshot](https://github.com/pprwf/PhyCom-Project__LightIntensityAlarm__/blob/main/Picture/Keypad.png "Keypad")
+* #### Jumper Wires
+> ![Kwire Screenshot](https://github.com/zenkoub/PC-PopPW/blob/3cebd1051ed2abb545242101dc01bb4e3d68098e/circuitComponents/JumperWires.png "Wire")
 
-## VDO สาธิตการใช้งานโปรเจค
-<video width="630" height="300" src="https://github.com/pprwf/PhyCom-Project__LightIntensityAlarm__/assets/109953609/03a49f24-4509-4754-8728-e520c8ac2526"></video>
-[YouTube](https://youtu.be/D-wrWCKwDfg?si=71cXJXo3C85lzNu7)
+* #### Resistor
+> ![resistor Screenshot](https://github.com/zenkoub/PC-PopPW/blob/3cebd1051ed2abb545242101dc01bb4e3d68098e/circuitComponents/Resistor.png "Resistor")
 
-## POSTER 
-![Poster Show](https://github.com/pprwf/PhyCom-Project__LightIntensityAlarm__/blob/main/Poster/LightAlarm_Pic.png "Post Pic")
-[Poster](https://github.com/pprwf/PhyCom-Project__LightIntensityAlarm__/blob/main/Poster/LightAlarm_Print.pdf "Poster")
+### VDO แนะนำโปรเจกต์
+[YouTube](https://youtu.be/D-wrWCKwDfg?si=71cXJXo3C85lzNu7 "Physical Computing - Project 1/2567 : PopPW")
+
+## POSTER
+![Poster Show](https://github.com/zenkoub/PC-PopPW/blob/63904f5d601fd48dbd01d3925087302760309e19/Poster/PosterPopPW.png "png Poster")
+[Poster](https://github.com/zenkoub/PC-PopPW/blob/5a164542471b24d45939dc8b442a7a700a66216b/Poster/Poster.pdf "pdf")
 
 ## Library ที่ใช้งาน
 ```c++

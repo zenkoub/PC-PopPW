@@ -37,12 +37,12 @@
 * #### Resistor
 > ![resistor Screenshot](https://github.com/zenkoub/PC-PopPW/blob/3cebd1051ed2abb545242101dc01bb4e3d68098e/circuitComponents/Resistor.png "Resistor")
 
-### VDO แนะนำโปรเจกต์
-[YouTube](https://youtu.be/D-wrWCKwDfg?si=71cXJXo3C85lzNu7 "Physical Computing - Project 1/2567 : PopPW")
-
-## POSTER
+## Poster
 ![Poster Show](https://github.com/zenkoub/PC-PopPW/blob/63904f5d601fd48dbd01d3925087302760309e19/Poster/PosterPopPW.png "png Poster")
 [Poster](https://github.com/zenkoub/PC-PopPW/blob/5a164542471b24d45939dc8b442a7a700a66216b/Poster/Poster.pdf "pdf")
+
+### Clip VDO แนะนำโปรเจกต์
+[YouTube](https://youtu.be/D-wrWCKwDfg?si=71cXJXo3C85lzNu7 "Physical Computing - Project 1/2567 : PopPW")
 
 ## Library ที่ใช้งาน
 ```c++

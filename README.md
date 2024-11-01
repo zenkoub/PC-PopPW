@@ -1,12 +1,12 @@
 # Physical Computing "PopPW"
-📌 Project นี้เป็นส่วนหนึ่งในรายวิชา PHYSICAL COMPUTING 06016409 ภาคเรียนที่ 1 ปีการศึกษา 2567\
+📌 Project นี้เป็นส่วนหนึ่งในรายวิชา PHYSICAL COMPUTING 06016409 ภาคเรียนที่ 1 ปีการศึกษา 2567
 คณะเทคโนโลยีสารสนเทศ สาขาเทคโนโลยีสารสนเทศ สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
 
 ## บทคัดย่อ
-“โครงงาน PopPW” เป็นการพัฒนาเกมเพื่อผ่อนคลายความเครียดสำหรับนักศึกษาที่เรียนวิชา Physical Computing\
-โดยมีแนวคิดในการนำเทคโนโลยีมาประยุกต์ใช้ในการสร้างเกมที่สนุกสนานและมีประโยชน์ เกมนี้มีลักษณะ คล้ายกับเกม PopCat\
-แต่มีการพัฒนาระบบเพิ่มเติม สามารถกดคลิ๊กได้ผ่าน Website และกดผ่าน Switch บนตัว Board\
-โดยค่าของคะแนนที่ได้จะมีการเชื่อมโยงกัน โครงงานยังมีการเผยแพร่โค้ดโปรแกรมเพื่อให้ผู้สนใจสามารถนำไปศึกษาและพัฒนาต่อยอดได้\
+    “โครงงาน PopPW” เป็นการพัฒนาเกมเพื่อผ่อนคลายความเครียดสำหรับนักศึกษาที่เรียนวิชา Physical Computing
+โดยมีแนวคิดในการนำเทคโนโลยีมาประยุกต์ใช้ในการสร้างเกมที่สนุกสนานและมีประโยชน์ เกมนี้มีลักษณะ คล้ายกับเกม PopCat
+แต่มีการพัฒนาระบบเพิ่มเติม สามารถกดคลิ๊กได้ผ่าน Website และกดผ่าน Switch บนตัว Board
+โดยค่าของคะแนนที่ได้จะมีการเชื่อมโยงกัน โครงงานยังมีการเผยแพร่โค้ดโปรแกรมเพื่อให้ผู้สนใจสามารถนำไปศึกษาและพัฒนาต่อยอดได้
 ผ่าน Github repository ซึ่งเป็นการส่งเสริมการแบ่งปันความรู้และพัฒนาชุมชนผู้พัฒนาเกมต่อไป
 
 ## ภาพรวมวงจร
@@ -46,68 +46,169 @@
 
 ## Library ที่ใช้งาน
 ```c++
-#include <Keypad.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <WiFiS3.h>
+#include <MQTTClient.h>
+#include <ArduinoJson.h>
 ```
 
-## การตั้งค่าตัวแปรและ Pin
+## ฟังก์ชั่นการเชื่อมต่อ MQTT
+* Arduino Side
 ```c++
-#define SIZE 4
+int status = WL_IDLE_STATUS;
+  while (status != WL_CONNECTED) {
+    Serial.print("Connecting to SSID: ");
+    Serial.println(WIFI_SSID);
+    status = WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    delay(10000);
+  }
 
-const byte LIGHT_PIN = A0;
-const byte BUTTON_PIN = 2;
-const byte LASER_PIN = 3;
-const byte BUZZER_PIN = 13;
-char TEXT[SIZE][SIZE] = {
-  {'1', '2', '3', 'A'},
-  {'4', '5', '6', 'B'},
-  {'7', '8', '9', 'C'},
-  {'*', '0', '#', 'D'}
-};
-const byte COLS[SIZE] = {8, 7, 6, 5};
-const byte ROWS[SIZE] = {12, 11, 10, 9};
-char pass[SIZE] = {'A', '6', '8', '#'};
-bool toggle = false;
-bool detect = false;
-short checkPass = 0;
-Keypad myKey = Keypad(makeKeymap(TEXT), ROWS, COLS, SIZE, SIZE);
+void connectToMQTT() {
+  mqtt.begin(MQTT_BROKER_ADRRESS, MQTT_PORT, network);
+  mqtt.onMessage(messageHandler);
+
+  Serial.print("Connecting to MQTT broker");
+  while (!mqtt.connect(MQTT_CLIENT_ID)) {
+    Serial.print(".");
+    delay(100);
+  }
+  Serial.println();
+  Serial.println("Connected to MQTT broker!");
+
+  mqtt.subscribe(subscription_TOPIC);
+  Serial.println("Subscribed to topic: " + String(subscription_TOPIC));
+}
+```
+* Web Server Side
+```js
+script.src = "https://unpkg.com/mqtt/dist/mqtt.min.js";
+
+script.onload = () => {
+  const client = mqtt.connect("ws://broker.hivemq.com:8000/mqtt");
+  const topic = "/test/roblox";
+
+  client.on("connect", () => {
+    console.log("Connected to HiveMQ WebSocket broker");
+    client.subscribe(topic, (err) => {
+      if (err) {
+        console.error("Subscription error:", err);
+      } else {
+        console.log(`Subscribed to topic: ${topic}`);
 ```
 
 ## ฟังก์ชันที่สำคัญ
-* ฟังก์ชันการเปิดปิด Laser ด้วย Push Button
+* ฟังก์ชันการกดปุ่มเพิ่มคะแนน
 ```c++
-if (digitalRead(BUTTON_PIN) == HIGH && !toggle) {
-    toggle = !toggle;
-    Serial.println("Switch On");
-    digitalWrite(LASER_PIN, HIGH);
-  } else if (digitalRead(BUTTON_PIN) == HIGH && toggle) {
-    toggle = !toggle;
-    digitalWrite(LASER_PIN, LOW);
-    Serial.println("Switch Off");
+void loop() {
+  mqtt.loop();
+  // Read the current state of the button
+  buttonState = digitalRead(buttonPin);
+
+  if (buttonState == HIGH && lastButtonState == LOW) {
+    // Button pressed, load and display the pressed shape
+    loadOriginalShape();
+    displayShape();
+
+    // Increment score
+    score++;
+    lcd.setCursor(7, 2); // Position for score
+    lcd.print(score);
+
+    sendToMQTT();
+
+    // Play pop sound
+    tone(buzzerPin, 1000, 200); // Tone at 1000Hz for 200ms
+  } else if (buttonState == LOW && lastButtonState == HIGH) {
+    // Button released, revert to original shape
+    loadPressedShape();
+    displayShape();
   }
-  delay(150);
-  Serial.println(analogRead(LIGHT_PIN));
-  if (analogRead(LIGHT_PIN) > 550) {
-    detect = true;
-  }
-  ```
-* ฟังก์ชันการเปิดใช้งาน Keypad
-```c++
-if (myKey.getKey() == '*')
-```
-* ฟังก์ชันการรับรหัสผ่านจาก Keypad
-  * ในที่นี้ รหัสผ่านที่ใช้ในการปิดเสียง Buzzer คือ "A68#"
-```c++
-for (short i = 0; i < SIZE; i++) {
-    tone(BUZZER_PIN, 500);
-    if (myKey.waitForKey() == pass[i]) {
-        checkPass++;
-        tone(BUZZER_PIN, 700);
-    } else {
-        checkPass = 0;
-        tone(BUZZER_PIN, 2000);
-        i = 0;
-    }
+
+  // Update lastButtonState to the current state
+  lastButtonState = buttonState;
 }
+  ```
+* ฟังก์ชัน Publish-Subscribe ผ่านบอร์ด
+```C++
+void sendToMQTT() {
+  StaticJsonDocument<128> jsonDoc;
+  jsonDoc["type"] = "increment";
+  jsonDoc["from"] = "board";
+  jsonDoc["value"] = score;
+
+  char messageBuffer[128];
+  serializeJson(jsonDoc, messageBuffer);
+
+  mqtt.publish(subscription_TOPIC, messageBuffer);
+  Serial.println("Published JSON to MQTT: " + String(messageBuffer));
+}
+
+void messageHandler(String &topic, String &payload) {
+  Serial.print("Received message on topic: ");
+  Serial.println(topic);
+  Serial.print("Payload: ");
+  Serial.println(payload);
+
+  StaticJsonDocument<128> jsonDoc;
+  DeserializationError error = deserializeJson(jsonDoc, payload);
+
+  if (error) {
+    Serial.print("Failed to parse JSON: ");
+    Serial.println(error.c_str());
+    return;
+  }
+
+  if (jsonDoc["type"] == "increment" && jsonDoc["from"] == "web") {
+    int receivedScore = jsonDoc["value"];
+    score = receivedScore;
+
+    // Update LCD with the new score
+    lcd.setCursor(7, 2);
+    lcd.print("   ");  // Clear previous score
+    lcd.setCursor(7, 2);
+    lcd.print(score);
+
+    Serial.print("Updated score from web: ");
+    Serial.println(score);
+  }
+}
+```
+* ฟังก์ชัน Publish-Subscribe ผ่านเว็บไซต์
+```js
+client.on("message", (topic, message) => {
+    console.log(`Received message: ${message.toString()} on topic: ${topic}`);
+    const value = JSON.parse(message.toString());
+    if (value.from == "board") {
+      score = value.value;
+      updateScore();
+      img.src = swappedSrc;
+      setTimeout(() => {
+        img.src = originalSrc;
+      }, 500);
+    }
+  });
+
+window.publishMessage = () => {
+    score++;
+    updateScore();
+
+    client.publish(
+      topic,
+      JSON.stringify({ type: "increment", from: "web", value: score }),
+      (err) => {
+        if (err) {
+          console.error("Publish error:", err);
+        } else {
+          console.log("Message published:", {
+            type: "increment",
+            from: "web",
+            value: score,
+          });
+        }
+      }
+    );
+  };
 ```
 
 ## สมาชิกผู้จัดทำ
